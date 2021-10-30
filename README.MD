@@ -36,4 +36,5 @@ And here's the [Article](https://www.nexusmods.com/graveyardkeeper/articles/2) o
 2. Configure the mod using NKN-Configurator.exe in your mod folder, or manually by editing the config.txt.
 
 ::  CREDITS ::
-* [Hy60koshk](https://github.com/Hy60koshk) or [megarunner](https://www.nexusmods.com/graveyardkeeper/users/3662701) for the original mod
+* [Hy60koshk](https://github.com/Hy60koshk) or [megarunner](https://www.nexusmods.com/graveyardkeeper/users/3662701) for the  [original mod](https://github.com/Hy60koshk/GraveKeeper-NotKeepersNeeds)
+
