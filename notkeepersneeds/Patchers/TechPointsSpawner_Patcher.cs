@@ -8,11 +8,12 @@ namespace NotKeepersNeeds {
 		[HarmonyPrefix]
 		public static bool Prefix(TechPointsSpawner __instance, ref int r, ref int g, ref int b) {
 			Config.Options opts = Config.GetOptions();
+			//float dt = Time.deltaTime;
 
-			r = opts.GetOrbCount(r, 0);
-			g = opts.GetOrbCount(g, 1);
-			b = opts.GetOrbCount(b, 2);
-
+			int[] orbs = opts.GetOrbCount(r, g, b);
+			r = orbs[0];
+			g = orbs[1];
+			b = orbs[2];
 			return true;
 		}
 	}

@@ -96,6 +96,7 @@ namespace NotKeepersNeeds {
 			public float CraftingSpeed = 1;
 			public float InteractionSpeed = 1;
 			public float TimeMult = 1;
+			public float TimeMultCustom = 1;
 			public float SleepTimeMult = 1;
 			public float OrbsMult = 1;
 			public bool _OrbsHasConst = false;
@@ -127,26 +128,39 @@ namespace NotKeepersNeeds {
 				ConfigReloadKey = new SinglePressKey(KeyCode.F6, opts.ConfigReloadKey.AlreadyPressed);
 			}
 
-			public int GetOrbCount(int orig, int idx) {
-				if (_OrbsHasConst && (OrbsConstAddIfZero || orig > 0)) {
-					orig += OrbsConstant[idx];
+			/**
+			 * Calculate the number of orbs that should be dropped
+			 * @params
+			 *		int r		amount of red orbs that would normally drop
+			 *		int g		amount of green orbs that would normally drop
+			 *		int b		amount of blue orbs that would normally drop
+			 * @returns
+			 *		int[] orbs	array with amount of orbs that will actually drop [r, g, b]
+			 */
+			public int[] GetOrbCount(int r, int g, int b)
+			{
+				int[] orbs = new int[3] { r, g, b };
+				for (int index = 0; index < 3; index++)
+				{
+					// if we are not getting any orbs normally
+					if (orbs[index] == 0) {
+						if (OrbsConstAddIfZero) {
+							// still add bonux orbs
+							orbs[index] += OrbsConstant[index];
+						}
+					}
+					else {
+						// if we are getting orbs normally, we always get the bonus orbs
+						orbs[index] += OrbsConstant[index];
+					}
+					// apply multiplier
+					float multiplied = orbs[index] * OrbsMult;
+					// round either up or down
+					multiplied = RoundDown ? Mathf.Round(multiplied - 0.5f) : Mathf.Round(multiplied + 0.5f);
+					// cast back to an int
+					orbs[index] = (int)(multiplied);
 				}
-				if (OrbsMult == 1) {
-					return orig > 0 ? orig : 0;
-				}
-				if (orig == 0) {
-					return 0;
-				}
-				float tmp = orig * OrbsMult;
-				if (tmp < 0) {
-					return 0;
-				}
-				if (RoundDown) {
-					return (int)(tmp - (tmp % 1));
-				}
-				else {
-					return (int)(tmp + (1 - tmp % 1));
-				}
+				return orbs;
 			}
 		}
 
@@ -224,6 +238,8 @@ namespace NotKeepersNeeds {
 								break;
 							case "TimeMult":
 								options_.TimeMult = parseFloat(rawVal, options_.TimeMult, 0.0009f);
+								// used to keep the custom value safe when toggling to 1
+								options_.TimeMultCustom = options_.TimeMult;
 								break;
 							case "SleepTimeMult":
 								options_.SleepTimeMult = parseFloat(rawVal, options_.SleepTimeMult, 0.09f);

@@ -15,6 +15,7 @@ namespace NotKeepersNeeds {
 			Config.Options opts = Config.GetOptions();
 			float mult = Time.timeScale == 10f ? opts.SleepTimeMult : opts.TimeMult;
 			if (mult != 1) {
+				
 				float accountableDelta = Time.deltaTime / 225f; // since this._cur_time += deltaTime / 225f
 				float adjDelta = accountableDelta * mult - accountableDelta;
 				EnvironmentEngine.SetTime(__instance.time_of_day.time_of_day + adjDelta);
@@ -33,12 +34,13 @@ namespace NotKeepersNeeds {
 			}
 			else if (opts.TimeScaleSwitchKey.IsPressed()) {
 				if (opts.TimeScaleSwitchKey.State == 0) {
-					opts.TimeMult /= 10;
+					// toggle back to 1
+					opts.TimeMult = 1;
+				} else {
+					// toggle to the custom value
+					opts.TimeMult = opts.TimeMultCustom;
 				}
-				else {
-					opts.TimeMult *= 10;
-				}
-				EffectBubblesManager.ShowImmediately(MainGame.me.player.pos3, "Timescale is set to " + opts.TimeMult);
+				EffectBubblesManager.ShowImmediately(MainGame.me.player.pos3, "TimeScale is set to " + opts.TimeMult);
 			}
 			else if (opts.AllowSaveEverywhere) {
 				if (opts.SaveGameKey.IsPressed()) {
