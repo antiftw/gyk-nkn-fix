@@ -6,6 +6,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+
+## [0.1.2] - 2021-11-8
+
+### Added
+
+Features:
+* Added Interaction / Crafting speed toggle
+
+Configuration values:
+* TimeMultDefault - Enabling configuration of the default value of timeMult, allowing players to switch between TimeMult and TimeMultDefault (instead of it just being 1)
+* CraftingSpeedKey - Key to toggle CraftingSpeed between configured value and default value (1)
+* ToggleCraftAndInteraction - choose whether CraftingSpeedKey also toggles InteractionSpeed to (1)
+
+### Changed
+* Tweaked TimeScale toggle, allowing players more freedom in usage
+* Moved some settings around in NKN-Configurator, grouping all hotkeys
+
+### Fixed
+
+- NKN-Configurator will now also parse decimal points properly in numerical configuration file values
+- Technical: Fixed compiler warnings in NKN-Configurator
+
 ## [0.1.1] - 2021-11-1
 ### Fixed
 
@@ -15,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1] - 2021-10-31
 ### Fixed
 * Added an assembly reference to `UnityEngine.InputLegacyModule` that prevented compilation using more recent .DLL's of the game.
-   * This also fixed some broken features that were using the (former)`UnityEngine.Input` class (used to handle keypresses):
+   * This also fixed some broken features that were using the (former) `UnityEngine.Input` class (used to handle keypresses):
      * Sprint
      * Save Anywhere
      * Timescale Switching
