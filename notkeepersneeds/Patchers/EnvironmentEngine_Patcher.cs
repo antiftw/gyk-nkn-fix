@@ -34,13 +34,33 @@ namespace NotKeepersNeeds {
 			}
 			else if (opts.TimeScaleSwitchKey.IsPressed()) {
 				if (opts.TimeScaleSwitchKey.State == 0) {
-					// toggle back to 1
-					opts.TimeMult = 1;
+					// toggle back to default value
+					opts.TimeMult = opts.TimeMultDefault;
 				} else {
 					// toggle to the custom value
 					opts.TimeMult = opts.TimeMultCustom;
 				}
 				EffectBubblesManager.ShowImmediately(MainGame.me.player.pos3, "TimeScale is set to " + opts.TimeMult);
+			}
+			else if (opts.CraftingSpeedKey.IsPressed())
+			{
+				if (opts.CraftingSpeedKey.State == 0){
+					opts.CraftingSpeed = 1;
+                    // only toggle interactionSpeed if ToggleCraftAndInteraction == true
+					opts.InteractionSpeed = opts.ToggleCraftAndInteraction ? 1 : opts.InteractionSpeed;
+					
+				} else {
+					opts.CraftingSpeed = opts.CraftingSpeedCustom;
+					// only toggle interactionSpeed if ToggleCraftAndInteraction == true
+					opts.InteractionSpeed = opts.ToggleCraftAndInteraction ? opts.InteractionSpeedCustom : opts.InteractionSpeed;
+					
+				}
+				string message = "CraftingSpeed is set to " + opts.CraftingSpeed;
+				if (opts.ToggleCraftAndInteraction) {
+					message = "CraftingSpeed is set to "+ opts.CraftingSpeed + " \n\n&\n\nInteractionspeed is set to " + opts.InteractionSpeed;
+				}
+
+				EffectBubblesManager.ShowImmediately(MainGame.me.player.pos3, message);
 			}
 			else if (opts.AllowSaveEverywhere) {
 				if (opts.SaveGameKey.IsPressed()) {

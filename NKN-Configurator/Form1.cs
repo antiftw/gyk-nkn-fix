@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace NKN_Configurator {
@@ -19,14 +21,14 @@ namespace NKN_Configurator {
 		private static string cfgPath_ = "config.txt";
 
 		private static Dictionary<string, string[]> optsOnPage_ = new Dictionary<string, string[]>() {
-			{ "System", new string[] { "TimeMult", "SleepTimeMult", "TimeScaleSwitchKey", "InteractionSpeed", "CraftingSpeed",
-				"InflationAmount" , "DullInventoryMusic"} },
+			{ "System", new string[] { "TimeMult", "TimeMultDefault",  "SleepTimeMult",  "InteractionSpeed", "CraftingSpeed","ToggleCraftAndInteraction",
+				  "InflationAmount" , "DullInventoryMusic"} },
 			{ "Sprint", new string[] { "EnergyDrainMult" , "EnergyReplenMult", "DefaultSpeed", "SprintSpeed",
-				"EnergyForSprint", "SprintKey", "SprintToggle"} },
+				"EnergyForSprint",  "SprintToggle"} },
 			{ "HP", new string[] { "UnconditionalSleep", "RegenMult", "DmgMult", "GlobalDmgMult"
 				, "HealthRegen", "HealIfTired", "HealthRegenPerSecond"} },
 			{ "Orbs", new string[] { "OrbsMult", "RoundDown", "OrbsConstAddIfZero", "OrbsConstant"} },
-			{ "SystemKeys", new string[] { "AddMoneyKey", "ResetPrayKey", "AllowSaveEverywhere", "SaveGameKey", "ConfigReloadKey"} }
+			{ "SystemKeys", new string[] { "TimeScaleSwitchKey", "CraftingSpeedKey", "SprintKey", "AddMoneyKey", "ResetPrayKey", "AllowSaveEverywhere", "SaveGameKey", "ConfigReloadKey"} }
 		};
 		private static short panelIdx_ = 0;
 		private static List<CfgPanel> cfgPanels_ = new List<CfgPanel>(3);
@@ -69,12 +71,12 @@ namespace NKN_Configurator {
 			public List<CfgComponent> CfgComponents => cfgComponents_;
 			private Button btnNext_ = null;
 
-			public void Show() {
+			public new void Show() {
 				BringToFront();
 				Visible = true;
 			}
 
-			public void Hide() {
+			public new void Hide() {
 				Visible = false;
 				theForm_.Controls.Remove(this);
 			}
@@ -450,6 +452,7 @@ namespace NKN_Configurator {
 				, { "EnergyForSprint", new FloatOption(0.01) }
 				, { "CraftingSpeed", new FloatOption() }
 				, { "InteractionSpeed", new FloatOption() }
+				, { "TimeMultDefault", new FloatOption(1) }
 				, { "TimeMult", new FloatOption() }
 				, { "SleepTimeMult", new FloatOption() }
 				, { "OrbsMult", new FloatOption() }
@@ -464,6 +467,7 @@ namespace NKN_Configurator {
 				, { "HealIfTired", new BooleanOption() }
 				, { "UnconditionalSleep", new BooleanOption() }
 				, { "AllowSaveEverywhere", new BooleanOption() }
+				, { "ToggleCraftAndInteraction", new BooleanOption() }
 			};
 			private Dictionary<string, IntArrayOption> arrayParams_ = new Dictionary<string, IntArrayOption>() {
 				{ "OrbsConstant", new IntArrayOption(
@@ -476,6 +480,7 @@ namespace NKN_Configurator {
 					, "RightShift", "RightControl", "RightAlt", "Z", "X", "CapsLock", "Backspace", "ScrollLock", "Pause", "PageUp" }
 				) }
 				, { "TimeScaleSwitchKey", new StringDropOption("F4", sysKeyOptions_) }
+				, { "CraftingSpeedKey", new StringDropOption("F7", sysKeyOptions_) }
 				, { "SaveGameKey", new StringDropOption("F5", sysKeyOptions_) }
 				, { "ConfigReloadKey", new StringDropOption("F6", sysKeyOptions_) }
 				, { "AddMoneyKey", new StringDropOption("F2", sysKeyOptions_) }
@@ -493,11 +498,28 @@ namespace NKN_Configurator {
 				List<string> keyslist = floatParams_.Keys.ToList();
 				foreach (string key in keyslist) {
 					if (rawValues.ContainsKey(key)) {
-						if (double.TryParse(rawValues[key], out fvalue)) {
+
+						var cultureInfo = CultureInfo.InvariantCulture;
+						// if the first regex matches, the number string is in us culture, i.e. decimal point
+						if (Regex.IsMatch(rawValues[key], @"^(:?[\d,]+\.)*\d+$"))
+						{
+							cultureInfo = new CultureInfo("en-US");
+						}
+						// if the second regex matches, the number string is in de culture, i.e. decimal comma
+						else if (Regex.IsMatch(rawValues[key], @"^(:?[\d.]+,)*\d+$"))
+						{
+							cultureInfo = new CultureInfo("de-DE");
+						}
+						NumberStyles styles = NumberStyles.Number;
+						bool isDouble = double.TryParse(rawValues[key], styles, cultureInfo, out fvalue);
+
+						if (isDouble) {
+
 							floatParams_[key].Value = fvalue;
 						}
 					}
 				}
+
 				keyslist = boolParams_.Keys.ToList();
 				foreach (string key in keyslist) {
 					if (rawValues.ContainsKey(key)) {

@@ -94,8 +94,11 @@ namespace NotKeepersNeeds {
 			public float EnergyReplenMult = 1;
 			public float EnergyForSprint = 0;
 			public float CraftingSpeed = 1;
+			public float CraftingSpeedCustom = 1;
 			public float InteractionSpeed = 1;
+			public float InteractionSpeedCustom = 1;
 			public float TimeMult = 1;
+			public float TimeMultDefault = 1;
 			public float TimeMultCustom = 1;
 			public float SleepTimeMult = 1;
 			public float OrbsMult = 1;
@@ -106,11 +109,13 @@ namespace NotKeepersNeeds {
 			public bool DullInventoryMusic = false;
 			public bool UnconditionalSleep = false;
 			public bool AllowSaveEverywhere = false;
+			public bool ToggleCraftAndInteraction = false;
 			public float InflationAmount = 1;
 			public int[] OrbsConstant = new int[] { 0, 0, 0 };
 
 			public ToggleKey SprintKey = new ToggleKey(KeyCode.LeftShift);
 			public SwitchKey TimeScaleSwitchKey = new SwitchKey(KeyCode.F4);
+			public SwitchKey CraftingSpeedKey = new SwitchKey(KeyCode.F4);
 
 			public SinglePressKey SaveGameKey = new SinglePressKey(KeyCode.F5);
 			public SinglePressKey ConfigReloadKey;// = new SinglePressKey(KeyCode.F6);
@@ -238,8 +243,12 @@ namespace NotKeepersNeeds {
 								break;
 							case "TimeMult":
 								options_.TimeMult = parseFloat(rawVal, options_.TimeMult, 0.0009f);
-								// used to keep the custom value safe when toggling to 1
+								// used save the custom value when toggling to 1, will always equal options_.TimeMult
 								options_.TimeMultCustom = options_.TimeMult;
+								break;
+							case "TimeMultDefault":
+								// the other toggle value
+								options_.TimeMultDefault = parseFloat(rawVal, options_.TimeMultDefault, 0.0009f);
 								break;
 							case "SleepTimeMult":
 								options_.SleepTimeMult = parseFloat(rawVal, options_.SleepTimeMult, 0.09f);
@@ -255,6 +264,9 @@ namespace NotKeepersNeeds {
 								break;
 							case "CraftingSpeed":
 								options_.CraftingSpeed = parsePositive(rawVal, options_.CraftingSpeed);
+								// used to keep the custom values safe when toggling to 1
+								options_.InteractionSpeedCustom = options_.InteractionSpeed;
+								options_.CraftingSpeedCustom = options_.CraftingSpeed;
 								break;
 							case "InteractionSpeed":
 								options_.InteractionSpeed = parsePositive(rawVal, options_.InteractionSpeed);
@@ -301,6 +313,13 @@ namespace NotKeepersNeeds {
 								}
 								catch { }
 								break;
+							case "CraftingSpeedKey":
+								try {
+									options_.CraftingSpeedKey.ChangeKey(Enum<KeyCode>.Parse(rawVal));
+								}
+								catch { }
+								break;
+
 							case "OrbsConstant": {
 									string[] ocValues = rawVal.Split(':');
 									options_._OrbsHasConst = true;
@@ -335,6 +354,9 @@ namespace NotKeepersNeeds {
 								break;
 							case "AllowSaveEverywhere":
 								options_.AllowSaveEverywhere = parseBool(rawVal);
+								break;
+							case "ToggleCraftAndInteraction":
+								options_.ToggleCraftAndInteraction = parseBool(rawVal);
 								break;
 						}					
 					}
