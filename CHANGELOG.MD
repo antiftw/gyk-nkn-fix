@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.1.3] - 2021-23-11
+### Fixed
+
+* Also allow negative numbers in OrbsConstant, so that you can effectively reduce the amount of specific tech orbs dropping (up until zero). This was but a bug introduced by the rewrite from 0.1.1.
 
 ## [0.1.2] - 2021-11-8
 
@@ -25,8 +29,8 @@ Configuration values:
 
 ### Fixed
 
-- NKN-Configurator will now also parse decimal points properly in numerical configuration file values
-- Technical: Fixed compiler warnings in NKN-Configurator
+* NKN-Configurator will now also parse decimal points properly in numerical configuration file values
+* Technical: Fixed compiler warnings in NKN-Configurator
 
 ## [0.1.1] - 2021-11-1
 ### Fixed

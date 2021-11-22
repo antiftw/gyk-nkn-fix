@@ -150,7 +150,7 @@ namespace NotKeepersNeeds {
 					// if we are not getting any orbs normally
 					if (orbs[index] == 0) {
 						if (OrbsConstAddIfZero) {
-							// still add bonux orbs
+							// still add bonus orbs
 							orbs[index] += OrbsConstant[index];
 						}
 					}
@@ -162,8 +162,9 @@ namespace NotKeepersNeeds {
 					float multiplied = orbs[index] * OrbsMult;
 					// round either up or down
 					multiplied = RoundDown ? Mathf.Round(multiplied - 0.5f) : Mathf.Round(multiplied + 0.5f);
-					// cast back to an int
-					orbs[index] = (int)(multiplied);
+					// only allow positve amounts and cast back to int
+					orbs[index] = multiplied < 0 ? 0 : (int)(multiplied);
+
 				}
 				return orbs;
 			}
