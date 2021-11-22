@@ -2,7 +2,7 @@
   "Id": "NotKeepersNeeds - FIX",
   "DisplayName": "NotKeepersNeeds - FIX",
   "Author": "AntiFTW",
-  "Version": "0.1.2",
+  "Version": "0.1.3",
   "Requires": [ ],
   "Enable": true,
   "AssemblyName": "NotKeepersNeeds.dll",
