@@ -87,9 +87,11 @@ This should compile without issues, since it is not dependent on the game specif
 This solution consists of 2 seperate projects:
 
 * Not Keepers Needs - the actual mod
-  * Compiles to `%repo_path%/notkeepersneeds/bin/debug/NotKeepersNeeds.dll`
+  * Compiles to `%repo_path%/notkeepersneeds/bin/%build_mode%/NotKeepersNeeds.dll`
 * NKN-Configurator - a wizard to assist in the configuration (optional)
-  * Compiles to `%repo_path%/NKN-Configurator/bin/debug/NKN-Configurator.exe`
+  * Compiles to `%repo_path%/NKN-Configurator/bin//%build_mode%/NKN-Configurator.exe`
+
+Where `%build_mode%` can be either `debug` or `release`.
 
 For the proper functioning of the mod, two additional files are required, which can be found in `notkeepersneeds/files/`:
 
